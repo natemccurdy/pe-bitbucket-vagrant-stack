@@ -7,7 +7,7 @@ This Vagrant stack includes 2 virtual machines:
 | puppet-master | A Monolithic install of PE 2015.3.2 on CentOS 7 |
 | bitbucket     | BitBucket Server 4.3.2 on CentOS 7              |
 
-The `bitbucket` VM is setup to install BitBucket Server using the all-in-one `.bin` installer from Atlassian. BitBucket Server is setup using a developer-mode which means it will only allow `git push`'s to it for 24 hours. You can create an account on https://my.atlassian.com and create a free evaluation license that will be good for 30 days. The licenses are very easy to make.
+The `bitbucket` VM is setup to install BitBucket Server using the all-in-one `.bin` installer from Atlassian. BitBucket Server is setup using a developer-mode which means it will only allow `git push`'s to it for about 8 hours. You can create an account on https://my.atlassian.com and create a free evaluation license that will be good for 30 days. The licenses are very easy to make.
 
 The goal of the stack is to facilitate testing and understanding of how to use code-manager with BitBucket Server.
 
@@ -53,7 +53,7 @@ If you are attempting to replicate this setup, here are the steps that you would
 
 After running vagrant up, there's a few things that need to be setup manually...
 
-1. Install the following BitBucket Server plugin by logging into the web GUI of the Stash server and going to `Find new add-ons`.
+1. Install the following BitBucket Server plugin by logging into the web GUI of the BitBucket server and going to `Find new add-ons`.
   * https://marketplace.atlassian.com/plugins/com.atlassian.stash.plugin.stash-web-post-receive-hooks-plugin/server/overview
 
 1. Make a `Project` and a blank `repository` inside that project
