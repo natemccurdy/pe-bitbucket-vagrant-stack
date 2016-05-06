@@ -42,7 +42,7 @@ class profile::code_manager {
   $code_manager_role_name = 'Deploy Environments'
   $create_role_creates_file = '/etc/puppetlabs/puppetserver/.puppetlabs/deploy_environments_created'
   $create_role_curl = @(EOT)
-    /opt/puppetlabs/puppet/bin/curl -k -X POST -H 'Content-Type: application/json' \
+    /opt/puppetlabs/puppet/bin/curl -s -k -X POST -H 'Content-Type: application/json' \
     https://<%= $classifier_hostname %>:4433/rbac-api/v1/roles \
     -d '{"permissions": [{"object_type": "environment", "action": "deploy_code", "instance": "*"},
     {"object_type": "tokens", "action": "override_lifetime", "instance": "*"}],"user_ids": [], "group_ids": [], "display_name": "<%= $code_manager_role_name  %>", "description": ""}' \
@@ -106,8 +106,8 @@ class profile::code_manager {
                     mv ${::settings::codedir}/environments/* /etc/puppetlabs/env_back_${timestamp}/;
                     rm /opt/puppetlabs/facter/facts.d/code_manager_mv_old_code.txt;
                     TOKEN=`/opt/puppetlabs/puppet/bin/ruby -e \"require 'json'; puts JSON.parse(File.read('${token_filename}'))['token']\"`;
-                    /opt/puppetlabs/puppet/bin/curl -k -X POST -H 'Content-Type: application/json' \"https://${::trusted['certname']}:8170/code-manager/v1/deploys?token=\$TOKEN\" -d '{\"environments\": [\"${::environment}\"], \"wait\": true}';
-                    /opt/puppetlabs/puppet/bin/curl -k -X POST -H 'Content-Type: application/json' \"https://${::trusted['certname']}:8170/code-manager/v1/deploys?token=\$TOKEN\" -d '{\"deploy-all\": true, \"wait\": true}';
+                    /opt/puppetlabs/puppet/bin/curl -s -k -X POST -H 'Content-Type: application/json' \"https://${::trusted['certname']}:8170/code-manager/v1/deploys?token=\$TOKEN\" -d '{\"environments\": [\"${::environment}\"], \"wait\": true}';
+                    /opt/puppetlabs/puppet/bin/curl -s -k -X POST -H 'Content-Type: application/json' \"https://${::trusted['certname']}:8170/code-manager/v1/deploys?token=\$TOKEN\" -d '{\"deploy-all\": true, \"wait\": true}';
                     sleep 15",
       path      => $::path,
       logoutput => true,
