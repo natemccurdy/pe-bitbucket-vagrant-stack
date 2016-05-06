@@ -4,7 +4,7 @@ This Vagrant stack includes 2 virtual machines:
 
 | VM Name       | Description |
 |---------------|-------------|
-| puppet-master | A Monolithic install of PE 2016.1.1 on CentOS 7 |
+| puppet-master | A Monolithic install of PE 2016.1.2 on CentOS 7 |
 | bitbucket     | BitBucket Server 4.3.2 on CentOS 7              |
 
 The `bitbucket` VM is setup to install BitBucket Server using the all-in-one `.bin` installer from Atlassian. BitBucket Server is setup using a developer-mode which means it will only allow `git push`'s to it for about 8 hours. You can create an account on https://my.atlassian.com and create a free evaluation license that will be good for 30 days. The licenses are very easy to make.
