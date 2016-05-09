@@ -23,7 +23,7 @@ Password is: **admin**
 
 ## What this stack does for you
 
-The stack sets up a PE 2015.3.2 puppet master and a BitBucket Server 4.3.2 instance.
+The stack sets up a PE 2016.1.2 puppet master and a BitBucket Server 4.3.2 instance.
 
 ### What's being automated?
 
