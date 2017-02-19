@@ -9,9 +9,8 @@ vms:
       - setup_control_repo
       - get_modules
       - puppet_master
-      - tune-pe-memory
+      - pe-memory-tuning
       - el-tools
-      - el-stop-firewall
       - el-fix-path
       - 4gb-memory
       - base
@@ -21,7 +20,6 @@ vms:
     roles:
       - puppet_agent
       - el-tools
-      - el-stop-firewall
       - el-fix-path
       - 2gb-memory
       - 2_cpus

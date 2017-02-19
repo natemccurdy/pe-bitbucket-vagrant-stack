@@ -55,20 +55,108 @@ roles:
       - type: shell
         inline: '/usr/bin/yum install telnet vim tree git -y'
 
+  el-fix-path:
+    provisioners:
+      - type: shell
+        inline: |
+          echo "export PATH=$PATH:/usr/local/bin" > /etc/profile.d/path_fix.sh
+
   2_cpus:
     providers:
       - type: virtualbox
         customize:
           - [modifyvm, !ruby/sym id, '--cpus', 2]
+      - type: vmware_fusion
+        vmx:
+          cpus: 2
 
-  tune-pe-memory:
+  2gb-memory:
+    providers:
+      - type: virtualbox
+        customize:
+          - [modifyvm, !ruby/sym id, '--memory', 2048]
+      - type: vmware_fusion
+        vmx:
+          memsize: 2048
+
+  4gb-memory:
+    providers:
+      - type: virtualbox
+        customize:
+          - [modifyvm, !ruby/sym id, '--memory', 4096]
+      - type: vmware_fusion
+        vmx:
+          memsize: 4096
+
+  pe-memory-tuning:
     provisioners:
+      # Upload to /tmp and then use a shell script to copy into place. This
+      # method works with remote machines.
+      - type: file
+        source: 'hieradata/common.yaml'
+        destination: '/tmp/common.yaml'
       - type: shell
-        inline: "mkdir -p /etc/puppetlabs/{code-staging,code}/environments/production/hieradata"
-      - type: shell
-        inline: "cp -v /vagrant/hieradata/common.yaml /etc/puppetlabs/code-staging/environments/production/hieradata"
-      - type: shell
-        inline: "cp -v /vagrant/hieradata/common.yaml /etc/puppetlabs/code/environments/production/hieradata/"
-      - type: shell
-        inline: "chmod 644 /etc/puppetlabs/code/environments/production/hieradata/common.yaml"
-
+        inline: |-
+          mkdir -p /etc/puppetlabs/code/environments/production/hieradata
+          if [ -e /tmp/common.yaml ]; then
+            install -m 0644 /tmp/common.yaml /etc/puppetlabs/code/environments/production/hieradata
+          fi
+  base:
+    provisioners:
+      # A generic hosts provisioner is defined here so that networking is one
+      # of the first things configured. Other roles can hook into the
+      # 'base networking' provisioner and override settings.
+      - {type: hosts, name: 'base networking'}
+    providers:
+      - type: virtualbox
+        linked_clone: true
+        overrides:
+          vm_defaults:
+            private_networks:
+              - {auto_network: true}
+            provisioners:
+              - type: hosts
+                name: 'base networking'
+                preserve_order: true
+                sync_hosts: true
+                add_localhost_hostnames: false
+                hosts:
+                  - ['@vagrant_private_networks', ['@vagrant_hostnames']]
+                imports: ['global', 'virtualbox', 'vmware']
+                exports:
+                  virtualbox:
+                    - ['@vagrant_private_networks', ['@vagrant_hostnames']]
+      - type: vmware_fusion
+        overrides:
+          vm_defaults:
+            private_networks:
+              - {auto_network: true}
+            provisioners:
+              - type: hosts
+                name: 'base networking'
+                preserve_order: true
+                sync_hosts: true
+                add_localhost_hostnames: false
+                hosts:
+                  - ['@vagrant_private_networks', ['@vagrant_hostnames']]
+                imports: ['global', 'virtualbox', 'vmware']
+                exports:
+                  vmware:
+                    - ['@vagrant_private_networks', ['@vagrant_hostnames']]
+      - type: vmware_workstation
+        overrides:
+          vm_defaults:
+            private_networks:
+              - {auto_network: true}
+            provisioners:
+              - type: hosts
+                name: 'base networking'
+                preserve_order: true
+                sync_hosts: true
+                add_localhost_hostnames: false
+                hosts:
+                  - ['@vagrant_private_networks', ['@vagrant_hostnames']]
+                imports: ['global', 'virtualbox', 'vmware']
+                exports:
+                  vmware:
+                    - ['@vagrant_private_networks', ['@vagrant_hostnames']]

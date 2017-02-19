@@ -1,6 +1,0 @@
---- # config/filters.yaml
-:filters:
-  - !ruby/object:PuppetDebuggingKit::Filter::DepreciatedRoles {}
-  - !ruby/object:ConfigBuilder::Filter::Roles {}
-  - !ruby/object:ConfigBuilder::Filter::Boxes {}
-  - !ruby/object:PuppetDebuggingKit::Filter::DebugKit {}
