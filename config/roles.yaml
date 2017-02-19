@@ -8,10 +8,9 @@ roles:
       - type: pe_bootstrap
         role: :master
         answer_extras:
-          - "q_puppetmaster_r10k_remote='ssh://git@bitbucket:7999/pup/control-repo.git'"
-          - "q_puppetmaster_r10k_private_key=/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa"
-          - "q_puppetmaster_code_manager_auto_configure=y"
-          - "q_puppetmaster_file_sync_service_enabled=y"
+          - '"puppet_enterprise::profile::master::r10k_remote": "ssh://git@bitbucket:7999/pup/control-repo.git"'
+          - '"puppet_enterprise::profile::master::r10k_private_key": "/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa"'
+          - '"puppet_enterprise::profile::master::code_manager_auto_configure": true'
 
   get_modules:
     provisioners:
