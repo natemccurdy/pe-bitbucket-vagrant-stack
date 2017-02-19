@@ -1,4 +1,4 @@
-forge "http://forge.puppetlabs.com"
+forge 'http://forge.puppetlabs.com'
 
 mod 'puppetlabs/stdlib'
 mod 'puppetlabs/inifile'
@@ -8,4 +8,4 @@ mod 'abrader/gms'
 mod 'pltraining/rbac'
 mod 'stahnma/epel'
 mod 'puppet/archive'
-
+mod 'npwalker-pe_code_manager_webhook'
