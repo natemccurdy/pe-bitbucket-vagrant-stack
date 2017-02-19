@@ -11,6 +11,7 @@ vms:
       - puppet_master
       - pe-memory-tuning
       - el-tools
+      - el-stop-firewall
       - el-fix-path
       - 4gb-memory
       - base
@@ -20,6 +21,7 @@ vms:
     roles:
       - puppet_agent
       - el-tools
+      - el-stop-firewall
       - el-fix-path
       - 2gb-memory
       - 2_cpus

@@ -2,6 +2,8 @@
 roles:
 
   puppet_master:
+    forwarded_ports:
+      - {guest: 443, host: 4443, auto_correct: true}
     provisioners:
       - type: shell
         inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
@@ -59,6 +61,14 @@ roles:
       - type: shell
         inline: |
           echo "export PATH=$PATH:/usr/local/bin" > /etc/profile.d/path_fix.sh
+
+  el-stop-firewall:
+    provisioners:
+      - type: shell
+        inline: |
+          systemctl stop firewalld.service 2>&1
+          systemctl disable firewalld.service 2>&1
+          exit 0
 
   2_cpus:
     providers:
