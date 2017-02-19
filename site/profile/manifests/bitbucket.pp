@@ -1,6 +1,6 @@
 class profile::bitbucket {
 
-  $bitbucket_version   = '4.4.1'
+  $bitbucket_version   = '4.13.0'
   $bitbucket_installer = "atlassian-bitbucket-${bitbucket_version}-x64.bin"
   $bitbucket_home      = '/var/atlassian/application-data/bitbucket'
 
@@ -9,10 +9,10 @@ class profile::bitbucket {
     enable => true,
   }
 
-  include ::epel
+  require epel
+  require archive
 
   # Get BitBucket
-  include ::archive
   archive { "/vagrant/${bitbucket_installer}":
     ensure  => present,
     source  => "https://www.atlassian.com/software/stash/downloads/binary/${bitbucket_installer}",
@@ -20,12 +20,14 @@ class profile::bitbucket {
     extract => false,
     cleanup => false,
   }
+
+  # Make sure the installer is executable
   file { "/vagrant/${bitbucket_installer}":
     mode    => '0755',
     require => Archive["/vagrant/${bitbucket_installer}"],
   }
 
-  # Setup Bitbucket
+  # Run BitBucket Installer
   exec { 'Run Bitbucket Server Installer':
     command   => "/vagrant/${bitbucket_installer} -q",
     creates   => "/opt/atlassian/bitbucket/${bitbucket_version}/bin/setenv.sh",
