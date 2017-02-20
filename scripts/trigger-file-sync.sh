@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script synchorizes code from code-staging to code.
 echo "==> Delete the code dir so file-sync can do its thing"
 sudo rm -rf /etc/puppetlabs/code/*
 
