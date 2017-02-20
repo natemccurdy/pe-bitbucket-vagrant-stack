@@ -17,28 +17,23 @@ roles:
   get_modules:
     provisioners:
       - type: shell
-        inline: "r10k puppetfile install --puppetfile /vagrant/Puppetfile --moduledir /etc/puppetlabs/code-staging/modules -v"
+        inline: "mkdir -p /etc/puppetlabs/code-staging/environments/production"
       - type: shell
-        inline: "/bin/chown -R pe-puppet:pe-puppet /etc/puppetlabs/code-staging"
+        inline: "r10k puppetfile install --puppetfile /vagrant/Puppetfile --moduledir /etc/puppetlabs/code-staging/environments/production/modules -v"
 
   setup_control_repo:
     provisioners:
       - type: shell
-        inline: "mkdir -p /etc/puppetlabs/code-staging/environments/production"
-      - type: shell
-        inline: "yes | cp /vagrant/environment.conf /etc/puppetlabs/code-staging/environments/production/environment.conf"
-      - type: shell
-        inline: "yes | cp -r /vagrant/manifests /etc/puppetlabs/code-staging/environments/production/"
-      - type: shell
-        inline: "yes | cp -r /vagrant/site /etc/puppetlabs/code-staging/environments/production/"
-      - type: shell
-        inline: "yes | cp -r /vagrant/scripts /etc/puppetlabs/code-staging/environments/production/"
-      - type: shell
-        inline: "/bin/chown -R pe-puppet:pe-puppet /etc/puppetlabs/code-staging"
-      - type: shell
-        inline: "/vagrant/scripts/trigger-file-sync.sh && sleep 5"
-      - type: shell
-        inline: 'puppet agent -t || true'
+        inline: |
+          yes | cp /vagrant/environment.conf /etc/puppetlabs/code-staging/environments/production/environment.conf
+          yes | cp -r /vagrant/manifests /etc/puppetlabs/code-staging/environments/production/
+          yes | cp -r /vagrant/site /etc/puppetlabs/code-staging/environments/production/
+          yes | cp -r /vagrant/hieradata /etc/puppetlabs/code-staging/environments/production/
+          yes | cp -r /vagrant/scripts /etc/puppetlabs/code-staging/environments/production/
+          /bin/chown -R pe-puppet:pe-puppet /etc/puppetlabs/code-staging
+          /vagrant/scripts/trigger-file-sync.sh && sleep 5
+          puppet agent -t || true
+          puppet agent -t || true
 
   puppet_agent:
     provisioners:
