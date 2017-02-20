@@ -8,7 +8,7 @@ vms:
     roles:
       - setup_control_repo
       - get_modules
-      - puppet_master
+      - puppet-master
       - pe-memory-tuning
       - el-tools
       - el-stop-firewall

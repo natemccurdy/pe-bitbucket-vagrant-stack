@@ -1,7 +1,7 @@
 ---
 roles:
 
-  puppet_master:
+  puppet-master:
     forwarded_ports:
       - {guest: 443, host: 4443, auto_correct: true}
     provisioners:
