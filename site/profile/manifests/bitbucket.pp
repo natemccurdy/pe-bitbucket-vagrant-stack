@@ -10,7 +10,24 @@ class profile::bitbucket {
   }
 
   require epel
-  require archive
+
+  include firewalld
+
+  firewalld_port { 'Open port 7990':
+    ensure   => present,
+    zone     => 'public',
+    port     => '7990',
+    protocol => 'tcp',
+  }
+
+  firewalld_port { 'Open port 7999':
+    ensure   => present,
+    zone     => 'public',
+    port     => '7999',
+    protocol => 'tcp',
+  }
+
+  include archive
 
   # Get BitBucket
   archive { "/vagrant/${bitbucket_installer}":
