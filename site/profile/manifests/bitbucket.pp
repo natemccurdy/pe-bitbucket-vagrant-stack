@@ -84,25 +84,6 @@ class profile::bitbucket {
     notify => Service['atlbitbucket'],
   }
 
-  file { "${bitbucket_home}/external-hooks":
-    ensure  => 'directory',
-    owner   => 'atlbitbucket',
-    group   => 'atlbitbucket',
-    mode    => '0775',
-    require => Exec['Run Bitbucket Server Installer'],
-  }
-
-  # The commit here is where I've made some BASH fixes to the scripts.
-  vcsrepo { "${bitbucket_home}/external-hooks/puppet-git-hooks":
-    ensure   => present,
-    provider => 'git',
-    source   => 'https://github.com/drwahl/puppet-git-hooks.git',
-    revision => '5bd7ddeda8f74a00bdb10aad674997d638f3b9b6',
-    owner    => 'atlbitbucket',
-    group    => 'atlbitbucket',
-    require  => [ File["${bitbucket_home}/external-hooks"], Exec['Run Bitbucket Server Installer'] ],
-  }
-
   # Add ruby and the puppet-lint gem for the pre-receive hooks.
   package { 'ruby':
     ensure => present,
