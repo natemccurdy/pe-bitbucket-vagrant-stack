@@ -49,13 +49,12 @@ roles:
   el-tools:
     provisioners:
       - type: shell
-        inline: '/usr/bin/yum install telnet vim tree git -y'
+        inline: 'yum install telnet vim tree git -y'
 
   el-fix-path:
     provisioners:
       - type: shell
-        inline: |
-          echo "export PATH=$PATH:/usr/local/bin" > /etc/profile.d/path_fix.sh
+        inline: "echo 'export PATH=$PATH:/usr/local/bin' > /etc/profile.d/path_fix.sh"
 
   el-stop-firewall:
     provisioners:
