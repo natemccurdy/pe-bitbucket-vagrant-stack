@@ -1,12 +1,5 @@
 class profile::master {
 
-  service { 'puppet':
-    ensure => running,
-    enable => true,
-  }
-
-  include firewalld
-
   $puppet_master_ports = [
     '443',
     '8140',

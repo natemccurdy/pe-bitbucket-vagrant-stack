@@ -6,10 +6,12 @@ File { backup => false }
 
 
 node 'bitbucket' {
+  include profile::common
   include profile::bitbucket
 }
 
 node 'puppet-master'{
+  include profile::common
   include profile::master
   include profile::code_manager
 }

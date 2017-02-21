@@ -4,15 +4,6 @@ class profile::bitbucket {
   $bitbucket_installer = "atlassian-bitbucket-${bitbucket_version}-x64.bin"
   $bitbucket_home      = '/var/atlassian/application-data/bitbucket'
 
-  service { 'puppet':
-    ensure => running,
-    enable => true,
-  }
-
-  require epel
-
-  include firewalld
-
   firewalld_port { 'Open port 7990':
     ensure   => present,
     zone     => 'public',

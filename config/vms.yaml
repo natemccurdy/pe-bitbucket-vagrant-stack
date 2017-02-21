@@ -10,7 +10,6 @@ vms:
       - get_modules
       - puppet-master
       - pe-memory-tuning
-      - el-tools
       - el-fix-path
       - 4gb-memory
       - base
@@ -19,7 +18,6 @@ vms:
     box:  "puppetlabs/centos-7.2-64-nocm"
     roles:
       - puppet_agent
-      - el-tools
       - el-fix-path
       - 2gb-memory
       - 2_cpus

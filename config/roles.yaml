@@ -46,11 +46,6 @@ roles:
       - type: shell
         inline: 'service atlbitbucket restart'
 
-  el-tools:
-    provisioners:
-      - type: shell
-        inline: 'yum install telnet vim tree git -y'
-
   el-fix-path:
     provisioners:
       - type: shell
