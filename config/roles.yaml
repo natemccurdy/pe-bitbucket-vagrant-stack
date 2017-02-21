@@ -6,7 +6,7 @@ roles:
       - {guest: 443, host: 4443, auto_correct: true}
     provisioners:
       - type: shell
-        inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
+        inline: 'sed -i /^search/d /etc/resolv.conf'
       - type: pe_bootstrap
         role: :master
         answer_extras:
@@ -38,7 +38,7 @@ roles:
   puppet_agent:
     provisioners:
       - type: shell
-        inline: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
+        inline: 'sed -i /^search/d /etc/resolv.conf'
       - type: pe_agent
         master_vm: 'puppet-master'
       - type: shell
