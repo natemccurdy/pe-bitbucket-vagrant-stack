@@ -1,6 +1,6 @@
 class profile::bitbucket {
 
-  $bitbucket_version   = '4.13.0'
+  $bitbucket_version   = '5.6.2'
   $bitbucket_installer = "atlassian-bitbucket-${bitbucket_version}-x64.bin"
   $bitbucket_home      = '/var/atlassian/application-data/bitbucket'
 
@@ -38,9 +38,12 @@ class profile::bitbucket {
   # Run BitBucket Installer
   exec { 'Run Bitbucket Server Installer':
     command   => "/vagrant/${bitbucket_installer} -q",
-    creates   => "/opt/atlassian/bitbucket/${bitbucket_version}/bin/setenv.sh",
+    creates   => "/opt/atlassian/bitbucket/${bitbucket_version}/bin/_start-webapp.sh",
     logoutput => true,
-    require   => File["/vagrant/${bitbucket_installer}"],
+    require   => [
+      File["/vagrant/${bitbucket_installer}"],
+      Package['git'],
+    ],
   }
 
   file { '/usr/bin/keytool':
@@ -48,12 +51,30 @@ class profile::bitbucket {
     target => "/opt/atlassian/bitbucket/${bitbucket_version}/jre/bin/keytool",
   }
 
-  service { 'atlbitbucket':
-    ensure     => running,
-    enable     => true,
-    hasstatus  => true,
-    hasrestart => true,
-    require    => Exec['Run Bitbucket Server Installer'],
+  file { 'bitbucket.service':
+    ensure  => file,
+    path    => '/etc/systemd/system/bitbucket.service',
+    mode    => '0644',
+    owner   => 'root',
+    group   => 'root',
+    content => epp('profile/bitbucket.service.epp', { bitbucket_version => $bitbucket_version }),
+    notify  => Exec['reload systemctl'],
+  }
+
+  exec { 'reload systemctl':
+    command     => 'systemctl daemon-reload',
+    path        => $facts['path'],
+    refreshonly => true,
+  }
+
+  service { 'bitbucket':
+    ensure  => running,
+    enable  => true,
+    require => [
+      Exec['Run Bitbucket Server Installer'],
+      File['bitbucket.service'],
+      Exec['reload systemctl'],
+    ]
   }
 
   # Add the Puppet CA as a trusted certificate authority because
@@ -65,15 +86,16 @@ class profile::bitbucket {
     password     => 'changeit',
     trustcacerts => true,
     require      => [ Exec['Run Bitbucket Server Installer'], File['/usr/bin/keytool'] ],
-    notify       => Service['atlbitbucket'],
+    notify       => Service['bitbucket'],
   }
 
   file_line { 'bitbucket dev mode':
-    ensure => present,
-    path   => "/opt/atlassian/bitbucket/${bitbucket_version}/bin/setenv.sh",
-    line   => 'export JAVA_OPTS="-Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${JAVA_OPTS} ${JVM_REQUIRED_ARGS} ${JVM_SUPPORT_RECOMMENDED_ARGS} ${BITBUCKET_HOME_MINUSD} -Datlassian.dev.mode=true"', #lint:ignore:single_quote_string_with_variables
-    match  => '^export JAVA_OPTS=',
-    notify => Service['atlbitbucket'],
+    ensure  => present,
+    path    => "/opt/atlassian/bitbucket/${bitbucket_version}/bin/_start-webapp.sh",
+    line    => 'JVM_SUPPORT_RECOMMENDED_ARGS="-Datlassian.dev.mode=true"',
+    match   => '#JVM_SUPPORT_RECOMMENDED_ARG',
+    notify  => Service['bitbucket'],
+    require => Exec['Run Bitbucket Server Installer'],
   }
 
   # Add ruby and the puppet-lint gem for the pre-receive hooks.

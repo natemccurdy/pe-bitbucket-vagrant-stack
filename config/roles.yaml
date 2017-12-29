@@ -44,7 +44,7 @@ roles:
       - type: shell
         inline: 'puppet agent -t || echo "Waiting for the puppet run to finish, then restarting bitbucket to enable dev mode..."; while [[ -f /opt/puppetlabs/puppet/cache/state/agent_catalog_run.lock ]]; do sleep 5; echo -n "." ; done'
       - type: shell
-        inline: 'service atlbitbucket restart'
+        inline: 'systemctl restart bitbucket'
 
   el-fix-path:
     provisioners:

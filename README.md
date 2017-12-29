@@ -5,7 +5,7 @@ This Vagrant stack includes 2 virtual machines:
 | VM Name       | Description |
 |---------------|-------------|
 | puppet-master | A Monolithic install of PE 2017.3.2 on CentOS 7 |
-| bitbucket     | BitBucket Server 4.3.2 on CentOS 7              |
+| bitbucket     | BitBucket Server 5.6.2 on CentOS 7              |
 
 The `bitbucket` VM is setup to install BitBucket Server using the all-in-one `.bin` installer from Atlassian. BitBucket Server is setup using a developer-mode which means it will only allow `git push`'s to it for about 8 hours. You can create an account on https://my.atlassian.com and create a free evaluation license that will be good for 30 days. The licenses are very easy to make.
 
@@ -23,7 +23,7 @@ Password is: **admin**
 
 ## What this stack does for you
 
-The stack sets up a PE 2017.3.2 puppet master and a BitBucket Server 4.3.2 instance.
+The stack sets up a PE 2017.3.2 puppet master and a BitBucket Server 5.6.2 instance.
 
 ### What's being automated?
 
@@ -34,19 +34,15 @@ If you are attempting to replicate this setup, here are the steps that you would
   * I've done this automatically with the puppet code in:
     `site/profile/manifests/code_manager.pp`
 1. Add the Puppet Master's CA cert to the Java keystore on the BitBucket server:
-  * Determine the $JAVA_HOME value used for BitBucket by looking in:
-
-    `/opt/atlassian/bitbucket/<version>/bin/setenv.sh`.
-    * You can also look at the `System Information` page of the Web GUI. In my case, it's
-
-      `/opt/atlassian/bitbucket/4.3.2/jre`.
+  * Determine the $JAVA_HOME value used for BitBucket by looking in: `/opt/atlassian/bitbucket/<version>/bin/setenv.sh`
+    * You can also look at the `System Information` page of the Web GUI. In my case, it's `/opt/atlassian/bitbucket/5.6.2/jre`
   * Run the following command and replace `$JAVA_HOME` with the path just determined:
+
     ```
     $JAVA_HOME/bin/keytool -import -alias puppet-server -file /etc/puppetlabs/puppet/ssl/certs/ca.pem -keystore $JAVA_HOME/lib/security/cacerts
     ```
 
     * When asked for a password, use `changeit`.
-
   * There's Puppet code to automate the Java KS cert at: [site/profile/manifests/bitbucket.pp:48-56](site/profile/manifests/bitbucket.pp#L48-56)
 
 ## Manual Setup of BitBucket

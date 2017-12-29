@@ -10,12 +10,24 @@ class profile::common {
     enable => true,
   }
 
+  # New versions of bitbucket require a modern git (2.2.0+).
+  # The WANDisco repo keeps an up to date rpm for centos7.
+  package { 'wandisco git repo':
+    ensure   => present,
+    name     => 'wandisco-git-release-7-1.noarch',
+    source   => 'http://opensource.wandisco.com/centos/7/git/x86_64/wandisco-git-release-7-1.noarch.rpm',
+    provider => 'rpm',
+  }
+
   # Some useful packages
   $pkgs = [ 'telnet', 'vim', 'tree', 'git' ]
 
   package { $pkgs:
     ensure  => present,
-    require => Class['epel'],
+    require => [
+      Class['epel'],
+      Package['wandisco git repo'],
+    ],
   }
 
 }
