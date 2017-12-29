@@ -7,10 +7,10 @@ class profile::code_manager {
 
   # The creation of a deploy key associated with a project can be automated
   # with this resource; however, in the Vagrant environment, the BitBucket server would need
-  # to be up and configured with a Project and r10k username/password before this will work.
+  # to be up and configured with a Project and username/password before this will work.
   git_deploy_key { $facts['fqdn']:
     ensure       => present,
-    username     => 'r10k',
+    username     => 'puppet',
     password     => 'puppet',
     project_name => 'PUP',
     path         => '/etc/puppetlabs/puppetserver/ssh/id-control_repo.rsa.pub',

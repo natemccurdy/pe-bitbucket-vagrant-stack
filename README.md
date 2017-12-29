@@ -60,8 +60,8 @@ After running vagrant up, there's a few things that need to be setup manually...
     * Project name: __puppet__ (with a short name of __PUP__)
     * Repository name: __control-repo__
 
-1. Create a user account that code_manager will use to deploy code.
-    * Create a user called `r10k` with a password of `puppet`.
+1. Create a user account that Code Manager will use to deploy code.
+    * Create a user called `puppet` with a password of `puppet`.
     * Make the r10k user an admin of the `PUP` project.
         * This is needed to allow the automatic creation of deploy keys with abrader/gms.
 
