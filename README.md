@@ -54,31 +54,32 @@ If you are attempting to replicate this setup, here are the steps that you would
 After running vagrant up, there's a few things that need to be setup manually...
 
 1. Install the following BitBucket Server plugin by logging into the web GUI of the BitBucket server and going to `Find new add-ons`.
-  * https://marketplace.atlassian.com/plugins/com.atlassian.stash.plugin.stash-web-post-receive-hooks-plugin/server/overview
+    * https://marketplace.atlassian.com/plugins/com.atlassian.stash.plugin.stash-web-post-receive-hooks-plugin/server/overview
 
-1. Make a `Project` and a blank `repository` inside that project
-  * I recommend a project called `puppet` (with a short name of `PUP`)
-  * ... and a repository called `control-repo`
+1. Make a `Project` and a new `repository`:
+    * Project name: __puppet__ (with a short name of __PUP__)
+    * Repository name: __control-repo__
 
 1. Create a user account that code_manager will use to deploy code.
-  * Create a user called `r10k` with a password of `puppet`.
-  * Make the r10k user an admin of the `PUP` project.
-    * This is needed to allow the automatic creation of deploy keys with abrader/gms.
+    * Create a user called `r10k` with a password of `puppet`.
+    * Make the r10k user an admin of the `PUP` project.
+        * This is needed to allow the automatic creation of deploy keys with abrader/gms.
 
 1. Either use the admin user to test pushing code, or create a user for yourself and add your SSH key to that user.
-  * If making a user for yourself, give your user account read/write or admin privilege to the `PUP` project.
+    * If making a user for yourself, give your user account read/write or admin privilege to the `PUP` project.
 
 1. Configure the hook on your control repo.
-  * Click the `Hooks` tab under the repo's settings.
-  * Click the pencil icon next to `Post-Receive WebHooks`
-  * The URL to drop in should be in the format of:
+    * Click the `Hooks` tab under the repo's settings.
+    * Click the pencil icon next to `Post-Receive WebHooks`
+    * The URL to drop in should be in the format of:
 
-    ```
-    https://puppet-master:8170/code-manager/v1/webhook?type=stash&token=<TOKEN>
-    ```
+      ```
+      https://puppet-master:8170/code-manager/v1/webhook?type=stash&token=<TOKEN>
+      ```
+
     * Replace \<TOKEN\> with the RBAC Token that was generated automatically for you.
-      * The token value can be found on the puppet master in a file at: `/vagrant/code_manager_rbac_token.txt`
-      * or in the Vagrant directory as: `code_manager_rbac_token.txt`
+        * The token value can be found on the puppet master in a file at: `/vagrant/code_manager_rbac_token.txt`
+        * or in the Vagrant directory as: `code_manager_rbac_token.txt`
 
 
 ## Troubleshooting
@@ -86,6 +87,7 @@ After running vagrant up, there's a few things that need to be setup manually...
 ### BitBucket
 
 The main BitBucket log that you'll want to monitor to troubleshoot the webhook is:
+
   ```
   /var/atlassian/application-data/bitbucket/log/atlassian-bitbucket.log
   ```
