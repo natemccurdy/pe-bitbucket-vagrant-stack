@@ -28,7 +28,8 @@ roles:
           yes | cp /vagrant/environment.conf /etc/puppetlabs/code-staging/environments/production/environment.conf
           yes | cp -r /vagrant/manifests /etc/puppetlabs/code-staging/environments/production/
           yes | cp -r /vagrant/site /etc/puppetlabs/code-staging/environments/production/
-          yes | cp -r /vagrant/hieradata /etc/puppetlabs/code-staging/environments/production/
+          yes | cp -r /vagrant/hiera.yaml /etc/puppetlabs/code-staging/environments/production/
+          yes | cp -r /vagrant/data /etc/puppetlabs/code-staging/environments/production/
           yes | cp -r /vagrant/scripts /etc/puppetlabs/code-staging/environments/production/
           /bin/chown -R pe-puppet:pe-puppet /etc/puppetlabs/code-staging
           /vagrant/scripts/trigger-file-sync.sh && sleep 5
@@ -83,13 +84,19 @@ roles:
       # Upload to /tmp and then use a shell script to copy into place. This
       # method works with remote machines.
       - type: file
-        source: 'hieradata/common.yaml'
+        source: 'data/common.yaml'
         destination: '/tmp/common.yaml'
+      - type: file
+        source: 'hiera.yaml'
+        destination: '/tmp/hiera.yaml'
       - type: shell
         inline: |-
-          mkdir -p /etc/puppetlabs/code/environments/production/hieradata
+          mkdir -p /etc/puppetlabs/code/environments/production/data
           if [ -e /tmp/common.yaml ]; then
-            install -m 0644 /tmp/common.yaml /etc/puppetlabs/code/environments/production/hieradata
+            install -m 0644 /tmp/common.yaml /etc/puppetlabs/code/environments/production/data
+          fi
+          if [ -e /tmp/hiera.yaml ]; then
+            install -m 0644 /tmp/hiera.yaml /etc/puppetlabs/code/environments/production/hiera.yaml
           fi
   base:
     provisioners:
