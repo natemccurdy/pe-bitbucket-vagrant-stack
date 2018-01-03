@@ -1,0 +1,10 @@
+---
+version: 5
+
+hierarchy:
+  - name: 'The Hierarchy'
+    datadir: data
+    data_hash: yaml_data
+    paths:
+      - "nodes/%{trusted.certname}.yaml"
+      - "common.yaml"
